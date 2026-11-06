@@ -180,7 +180,7 @@ p.body{max-width:68ch}
   <nav class="rail" aria-label="Sections">
     <p>What happened, in order</p>
     <ol>
-      <li><a href="#problem"><span>1</span>The problem and the bet</a></li>
+      <li><a href="#problem"><span>1</span>The problem and the hypothesis</a></li>
       <li><a href="#data"><span>2</span>Data integration</a></li>
       <li><a href="#build"><span>3</span>Ledger, isolation, first engines</a></li>
       <li><a href="#law"><span>4</span>A law into a workflow</a></li>
@@ -194,17 +194,17 @@ p.body{max-width:68ch}
   <main>
 
     <section id="problem">
-      <div class="sec-head"><span class="num">1</span><h2>The problem, and the bet</h2></div>
+      <div class="sec-head"><span class="num">1</span><h2>The problem, and the hypothesis</h2></div>
       <p class="situation">As AI produces more and more creative work, the standards for judging it matter more, and the art market is one of the few markets where prices are still set without data. Primary-market sales are not disclosed, so galleries price without a basis and buyers cannot check one. That asymmetry is artificial: the data exists, it just is not shared.</p>
       <ul class="items">
-        <li class="plain"><p>The bet: public records, linked per artist, can give galleries a price basis. Auction results, art fairs, biennales, and museum collections are all public; nobody had joined them.</p></li>
+        <li class="plain"><p>The hypothesis: public records, linked per artist, can give galleries a price basis. Auction results, art fairs, biennales, and museum collections are all public; nobody had joined them.</p></li>
         <li class="plain"><p>The rule: a gallery’s own records sharpen only that gallery’s estimates and never leave its scope. This was a design constraint from the start, and the field later confirmed it (section 5).</p></li>
       </ul>
     </section>
 
     <section id="data">
       <div class="sec-head"><span class="num">2</span><h2>Data integration: an ontology built on one artist ID</h2></div>
-      <p class="situation">Gallery prices are private, so estimates had to come from public records spread across auction houses, art fairs, listing sites, and museum collections, none of which were meant to fit together.</p>
+      <p class="situation">Gallery prices are private, so estimates had to come from public records spread across auction houses, art fairs, listing sites, and museum collections, none of which were meant to fit together. Ontology here means the object types and the links between them, all keyed to one artist ID.</p>
 
       <figure>
         <div class="diagram">
@@ -453,7 +453,7 @@ p.body{max-width:68ch}
         <li><div class="tags"><span class="tag">Built</span></div><p>During the PoCs, a client report took over 30 seconds. Timing each step showed repeated reads of the raw transaction table; precomputing those values brought it down to 0.76 seconds.</p></li>
         <li><div class="tags"><span class="tag">Built</span></div><p>Sales ledgers came in each gallery’s own format, so an LLM import reads the format as it is and asks the user only about rows with no currency.</p></li>
       </ul>
-      <p class="body">This is where the bet in section 1 landed: galleries set real prices from a basis built on public records and sharpened only by their own sales.</p>
+      <p class="body">This is where the hypothesis from section 1 was put to use: galleries set real prices from a basis built on public records and sharpened only by their own sales.</p>
     </section>
 
   </main>
