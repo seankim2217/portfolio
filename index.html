@@ -156,7 +156,7 @@ p.body{max-width:68ch}
 <header class="top">
   <h1 class="name">Seyeon Kim</h1>
   <p class="role">Portfolio for the Deployment Strategist role, Palantir Seoul</p>
-  <p class="lead">This page follows Clartity, the art price data platform I built and ran for galleries, in the order a deployment runs: from the first gallery visits to a pilot where galleries used its estimates to set real prices. I planned and designed the whole service and developed it with a teammate and AI coding agents.</p>
+  <p class="lead">This page follows Clartity, the art price data platform I built and ran for galleries, in the order it happened: the problem, what was built, what galleries said, what changed because of it, and a pilot where galleries used its estimates to set real prices. I planned and designed the whole service and developed it with a teammate and AI coding agents.</p>
   <ul class="links">
     <li><a href="https://clartity.com">clartity.com</a></li>
     <li><a href="mailto:kites33@naver.com">kites33@naver.com</a></li>
@@ -178,28 +178,27 @@ p.body{max-width:68ch}
 
 <div class="layout">
   <nav class="rail" aria-label="Sections">
-    <p>The deployment, in order</p>
+    <p>What happened, in order</p>
     <ol>
-      <li><a href="#field"><span>1</span>Field discovery</a></li>
+      <li><a href="#problem"><span>1</span>The problem and the bet</a></li>
       <li><a href="#data"><span>2</span>Data integration</a></li>
-      <li><a href="#engine"><span>3</span>Anchor and tilt engine</a></li>
-      <li><a href="#gallery"><span>4</span>An anchor per gallery</a></li>
-      <li><a href="#deploy"><span>5</span>On-site deployment</a></li>
-      <li><a href="#law"><span>6</span>A law into a workflow</a></li>
+      <li><a href="#build"><span>3</span>Ledger, isolation, first engines</a></li>
+      <li><a href="#law"><span>4</span>A law into a workflow</a></li>
+      <li><a href="#field"><span>5</span>Into the field</a></li>
+      <li><a href="#engine"><span>6</span>Anchor and tilt engine</a></li>
+      <li><a href="#gallery"><span>7</span>An anchor per gallery</a></li>
+      <li><a href="#deploy"><span>8</span>On site: PoCs and the pilot</a></li>
     </ol>
   </nav>
 
   <main>
 
-    <section id="field">
-      <div class="sec-head"><span class="num">1</span><h2>Field discovery: what galleries use, and why they say no</h2></div>
-      <p class="situation">Before building further, I needed to see how galleries price and record their sales, and what would stop them from adopting anything new.</p>
+    <section id="problem">
+      <div class="sec-head"><span class="num">1</span><h2>The problem, and the bet</h2></div>
+      <p class="situation">As AI produces more and more creative work, the standards for judging it matter more, and the art market is one of the few markets where prices are still set without data. Primary-market sales are not disclosed, so galleries price without a basis and buyers cannot check one. That asymmetry is artificial: the data exists, it just is not shared.</p>
       <ul class="items">
-        <li class="plain"><p>Cold email brought no conversions, so I moved to in-person visits and art-fair booth meetings, 14 of them at fairs.</p></li>
-        <li class="plain"><p>From a list of 75 target galleries, I held 36 in-person meetings and moved 10 into PoCs.</p></li>
-        <li class="plain"><p>I grouped galleries by the artists they represent, their size, and how often they exhibit, and changed the proposal for each group.</p></li>
-        <li class="plain"><p>Among the galleries I surveyed, 20% kept records by hand and 80% used overseas SaaS.</p></li>
-        <li class="plain"><p>The reason galleries gave for saying no: if their sales records get out, they lose negotiating power on price. That confirmed the constraint the product was designed around, which is that a gallery’s prices must never reach anyone else (section 4).</p></li>
+        <li class="plain"><p>The bet: public records, linked per artist, can give galleries a price basis. Auction results, art fairs, biennales, and museum collections are all public; nobody had joined them.</p></li>
+        <li class="plain"><p>The rule: a gallery’s own records sharpen only that gallery’s estimates and never leave its scope. This was a design constraint from the start, and the field later confirmed it (section 5).</p></li>
       </ul>
     </section>
 
@@ -272,75 +271,132 @@ p.body{max-width:68ch}
         <figcaption>Internal view of one artist’s relation graph, built from Wikidata. Product UI is in Korean.</figcaption>
       </figure>
     </section>
-
-    <section id="engine">
-      <div class="sec-head"><span class="num">3</span><h2>The pricing engine: anchor and tilt</h2></div>
-      <p class="situation">A retrained gallery price model improved its overall score but got worse on the segment that mattered most.</p>
+    <section id="build">
+      <div class="sec-head"><span class="num">3</span><h2>The ledger, the isolation, and the first engines</h2></div>
+      <p class="situation">Galleries needed something they would open every day, so the first product was a sales ledger, with the price basis built around it.</p>
+      <ul class="items">
+        <li class="plain"><p>The first plan was a mobile app. Reference checks with a teammate showed that gallery work runs on desktops, so it became a web product.</p></li>
+        <li><div class="tags"><span class="tag">Built</span></div><p>Two engines came first: an auction price model trained on the public records, and a gallery price model for primary-market work. Section 6 covers what happened to the second one.</p></li>
+        <li><div class="tags"><span class="tag">Built</span></div><p>Isolation is enforced in the database. Row-level security on 141 tables keeps each customer’s records inside its own scope.</p></li>
+      </ul>
 
       <div class="tablewrap">
         <table>
-          <thead><tr><th>Retrained model</th><th>Before</th><th>After</th></tr></thead>
+          <thead><tr><th>Who</th><th>What they see</th><th>When</th><th>Why</th></tr></thead>
           <tbody>
-            <tr><td>Overall</td><td class="n">37.9%</td><td class="n">36.9%</td></tr>
-            <tr class="hl"><td>Core segment</td><td class="n">28.7%</td><td class="n">38.3%</td></tr>
+            <tr><td>Gallery</td><td>Estimate, error range, confidence grade</td><td>All artists, including thinly traded ones</td><td>Built from public data and the gallery’s own sales, which stay its own</td></tr>
+            <tr><td>Collector (outside)</td><td>Anonymized price range</td><td>Only artists with 5+ recorded sales</td><td>Under 5, individual deals become identifiable</td></tr>
           </tbody>
-          <caption>Median absolute percentage error. Lower is better.</caption>
         </table>
       </div>
 
-      <p class="body">Instead of swapping in the new model, I compared where a model helps and where plain statistics do better, on the same test set. Gallery interviews and an auction-house seminar had shown me how prices are actually set: start from comparable works, then adjust for the differences.</p>
+      <ul class="items">
+        <li class="plain"><p>A lawyer reviewed the dual-output structure, and I filed a Korean patent application for it (pending).</p></li>
+        <li><div class="tags"><span class="tag">Built</span></div><p>AI proposes, people confirm. Image analysis fills 12 artwork fields only when 5 runs agree, and flags the rest for review. Generated drafts, email sorting, and collector suggestions never send anything or change data on their own.</p></li>
+      </ul>
+    </section>
+
+    <section id="law">
+      <div class="sec-head"><span class="num">4</span><h2>Turning a law without final rules into a workflow</h2></div>
+      <p class="situation">In the same period, Korea’s artist resale-royalty law arrived before its rates and thresholds were final.</p>
+
+      <div class="flow" aria-label="Resale royalty workflow">
+        <span class="step">Suggested</span><span class="then">then</span>
+        <span class="step">Confirmed</span><span class="then">then</span>
+        <span class="step">Artist notified</span><span class="then">then one of</span>
+        <span class="ends"><span class="step">Paid</span><span class="step">Exempt</span><span class="step">Disputed</span></span>
+      </div>
+
+      <ul class="items">
+        <li><div class="tags"><span class="tag">Built</span></div><p>The rate (3%), threshold (KRW 500,000), and protection period (70 years) live in settings, not code. Each case stores the values in force when it occurred, so later changes never recompute past cases.</p></li>
+        <li><div class="tags"><span class="tag">Built</span></div><p>Detection creates a suggestion, not an obligation. Acquisition dates entered for admin purposes were being read as resales, so a person confirms each case.</p></li>
+        <li><div class="tags"><span class="tag">Built</span></div><p>The acquisition-date field tells users that filling it in makes the work subject to resale royalty.</p></li>
+        <li><div class="tags"><span class="tag">Built</span></div><p>In the same release, sales of KRW 10M or more create a reporting task due in 30 days, with the government form as a PDF. The threshold is borrowed from anti-money-laundering rules and marked as pending.</p></li>
+      </ul>
+    </section>
+    <section id="field">
+      <div class="sec-head"><span class="num">5</span><h2>Into the field: what galleries said</h2></div>
+      <p class="situation">With a working product, I went to galleries to see how they price and record their sales, and what would stop them from adopting anything new.</p>
+      <ul class="items">
+        <li class="plain"><p>Cold email brought nothing, so I moved to in-person visits, then to pre-booked meetings and art-fair booths. 14 of the meetings came from fair booths.</p></li>
+        <li class="plain"><p>From a list of 75 target galleries, I held 36 in-person meetings.</p></li>
+        <li class="plain"><p>I grouped galleries by the artists they represent, their size, and how often they exhibit, and changed the proposal for each group.</p></li>
+        <li class="plain"><p>Among the galleries I surveyed, 20% kept records by hand and 80% used overseas SaaS.</p></li>
+        <li class="plain"><p>The reason galleries gave for saying no: if their sales records get out, they lose negotiating power on price. That confirmed the isolation in section 3.</p></li>
+        <li class="plain"><p>How galleries actually price: start from comparable works by the same artist, then adjust for the differences. I heard this in gallery meetings and at an auction-house seminar, and it changed the engine (section 6).</p></li>
+      </ul>
+    </section>
+
+    <section id="engine">
+      <div class="sec-head"><span class="num">6</span><h2>The pricing engine: anchor and tilt</h2></div>
+      <p class="situation">A retrained gallery price model looked flat overall, but it got much worse on the largest part of the data.</p>
 
       <div class="tablewrap">
         <table>
-          <thead><tr><th>Approach (same test set)</th><th>Error</th></tr></thead>
+          <thead><tr><th>Retrained model (all 210,836 test listings, one model)</th><th>Before</th><th>After</th></tr></thead>
           <tbody>
-            <tr><td>Model alone</td><td class="n">34.2%</td></tr>
-            <tr><td>Comparable sales alone</td><td class="n">32.0%</td></tr>
-            <tr><td>Anchor and tilt: comparables set the level, the model only adjusts</td><td class="n">23.9%</td></tr>
-            <tr class="hl"><td>Same, with a medium-aware anchor</td><td class="n">23.4%</td></tr>
+            <tr><td>Overall</td><td class="n">37.9%</td><td class="n">36.9%</td></tr>
+            <tr class="hl"><td>Largest data source (58% of test listings)</td><td class="n">28.7%</td><td class="n">38.3%</td></tr>
+            <tr><td>Artists with auction history</td><td class="n">36.5%</td><td class="n">52.2%</td></tr>
+            <tr><td>Newly added source (Saatchi)</td><td class="n">310.2%</td><td class="n">35.2%</td></tr>
           </tbody>
-          <caption>Median absolute percentage error.</caption>
+          <caption>Median absolute percentage error on listed asking prices. Lower is better. Gains on the new source hid losses elsewhere, so the overall number barely moved.</caption>
+        </table>
+      </div>
+
+      <p class="body">I didn’t ship it. Instead I went back to how galleries actually price (section 5): start from comparable works, then adjust for the differences. So I tested where the model helps and where plain statistics do better.</p>
+
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Approach (test listings whose artist has other listings in training)</th><th>Error</th></tr></thead>
+          <tbody>
+            <tr><td>Model alone (two models split by auction history, not deployed)</td><td class="n">34.2%</td></tr>
+            <tr><td>Comparable listings alone</td><td class="n">32.0%</td></tr>
+            <tr><td>Anchor and tilt: comparables set the level, the model only adjusts for size</td><td class="n">23.9%</td></tr>
+            <tr class="hl"><td>Anchor and tilt with a medium-aware anchor</td><td class="n">23.4%</td></tr>
+          </tbody>
+          <caption>Median absolute percentage error. Same 80/20 split method, a month apart on the data at the time. The last row comes from a later run of the deployed setup, where anchor and tilt alone also measured 23.9%.</caption>
         </table>
       </div>
 
       <dl class="defs">
-        <div><dt>Anchor</dt><dd>The median price of comparable works by the same artist, within the same medium when there are 3 or more. It sets the price level, and it comes from statistics, not the model.</dd></div>
-        <div><dt>Tilt</dt><dd>How much this work’s size moves the price. The model runs twice, once at this work’s size and once at the artist’s typical size, and the ratio of the two is the tilt, kept between 0.5 and 2.0. Artist and medium effects cancel out in the ratio, so it still works for artists with little sales history.</dd></div>
-        <div><dt>Estimate</dt><dd>Anchor × tilt, returned with a calibrated range and a confidence grade.</dd></div>
+        <div><dt>Anchor</dt><dd>The median asking price of the same artist’s other listings, taken within the same medium group (prints vs. unique works) when there are 3 or more. It sets the price level, and it comes from statistics, not the model.</dd></div>
+        <div><dt>Tilt</dt><dd>How much this work’s size moves the price. The model runs twice with identical inputs except size: once at this work’s size and once at the median size of the artist’s listings. The ratio of the two is the tilt, kept between 0.5 and 2.0. Everything except size is held fixed, so the model contributes only a size adjustment. When no size is given, the tilt is 1.</dd></div>
+        <div><dt>Estimate</dt><dd>Anchor × tilt, with a range and a confidence grade based on how many comparable listings exist (A: 20+, B: 5–19, C: 1–4).</dd></div>
+        <div><dt>When data is thin</dt><dd>1–4 comparable listings: an estimate is shown with grade C. No listings for the artist: a reference range from other artists’ works (filtered by medium when given), labeled as not artist-specific. Fewer than 5 such references: no price.</dd></div>
       </dl>
 
       <figure>
         <div class="diagram">
-          <svg viewBox="0 0 960 250" role="img" aria-label="Comparable listings give the anchor; the model, run twice at different sizes, gives the tilt; the estimate is anchor times tilt, with a calibrated range">
+          <svg viewBox="0 0 960 250" role="img" aria-label="Comparable listings give the anchor; the model, run twice at different sizes, gives the tilt; the estimate is anchor times tilt, with a range and grade">
             <defs>
               <marker id="ah3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead strong" d="M0,0 L10,5 L0,10 z"/></marker>
             </defs>
-            <rect class="box" x="0" y="20" width="250" height="72" rx="6"/><text class="t" x="16" y="50">Comparable listings</text><text class="s" x="16" y="73">same artist, same medium if 3+</text>
-            <rect class="box strong" x="320" y="20" width="250" height="72" rx="6"/><text class="t" x="336" y="50">Anchor</text><text class="s" x="336" y="73">median price, from statistics</text>
+            <rect class="box" x="0" y="20" width="250" height="72" rx="6"/><text class="t" x="16" y="50">Comparable listings</text><text class="s" x="16" y="73">same artist, same medium group if 3+</text>
+            <rect class="box strong" x="320" y="20" width="250" height="72" rx="6"/><text class="t" x="336" y="50">Anchor</text><text class="s" x="336" y="73">median asking price</text>
             <path class="line strong" d="M250,56 L316,56" marker-end="url(#ah3)"/>
             <rect class="box" x="0" y="150" width="250" height="72" rx="6"/><text class="t" x="16" y="180">Model, run twice</text><text class="s" x="16" y="203">this size vs typical size</text>
-            <rect class="box strong" x="320" y="150" width="250" height="72" rx="6"/><text class="t" x="336" y="180">Tilt</text><text class="s" x="336" y="203">size ratio, 0.5 to 2.0</text>
+            <rect class="box strong" x="320" y="150" width="250" height="72" rx="6"/><text class="t" x="336" y="180">Tilt</text><text class="s" x="336" y="203">0.5 to 2.0, only when size is given</text>
             <path class="line strong" d="M250,186 L316,186" marker-end="url(#ah3)"/>
             <path class="line strong" d="M570,56 C610,56 610,108 646,112" marker-end="url(#ah3)"/>
             <path class="line strong" d="M570,186 C610,186 610,134 646,130" marker-end="url(#ah3)"/>
             <rect class="hub" x="650" y="84" width="310" height="76" rx="8"/>
             <text class="hubtext" x="805" y="118" text-anchor="middle">Anchor × tilt</text>
-            <text class="hubsub" x="805" y="142" text-anchor="middle">calibrated range and confidence grade</text>
-            <text class="s" x="650" y="196">Too few comparable records: no price is shown.</text>
+            <text class="hubsub" x="805" y="142" text-anchor="middle">range and grade</text>
           </svg>
         </div>
       </figure>
 
       <ul class="items">
         <li><div class="tags"><span class="tag">Built</span><span class="tag used">Used by galleries</span></div><p>Pilot galleries set real prices with anchor and tilt estimates.</p></li>
-        <li><div class="tags"><span class="tag">Built</span></div><p>Ranges are calibrated. In testing, the 80% range contained the actual price 80.3% of the time. When comparable records are too few, the product shows no price rather than a weak one.</p></li>
-        <li><div class="tags"></div><p>This isn’t a new algorithm. It automates the sales-comparison approach that appraisers use, with the model limited to adjustments.</p></li>
+        <li><div class="tags"><span class="tag">Built</span></div><p>Deployed to the pricing API in June 2026. The medium-aware anchor followed in July 2026.</p></li>
+        <li><div class="tags"><span class="tag">Built</span></div><p>Ranges are calibrated. On an evaluation split separate from the one used to set the range widths, the model’s 80% ranges contained the listed price 80.4% of the time. The same widths are applied around the anchor × tilt estimate.</p></li>
+        <li><div class="tags"></div><p>This isn’t a new algorithm. It automates the comparison approach appraisers use (start from comparables, then adjust for differences), applied to gallery asking prices, with the model limited to the size adjustment.</p></li>
       </ul>
     </section>
-
     <section id="gallery">
-      <div class="sec-head"><span class="num">4</span><h2>One platform, an anchor per gallery</h2></div>
-      <p class="situation">Each gallery prices the same artist a little differently, so one market-wide anchor couldn’t fit them all. At the same time, no gallery’s prices could ever reach another gallery.</p>
+      <div class="sec-head"><span class="num">7</span><h2>One platform, an anchor per gallery</h2></div>
+      <p class="situation">Each gallery prices the same artist a little differently, so one market-wide anchor couldn’t fit them all. The fix had to respect the rule from section 1: a gallery’s own sales move only its own estimates.</p>
 
       <dl class="defs">
         <div><dt>Anchor swap</dt><dd>When a gallery has its own sales of an artist (same medium group, last 24 months), its anchor moves from the market median toward its own median. The weight grows with the number of its own sales, n/(n+5): with 4 sales, the anchor is 44% its own median and 56% the market median. The tilt stays shared, because a few dozen sales per gallery can’t train a model.</dd></div>
@@ -382,55 +438,22 @@ p.body{max-width:68ch}
       <ul class="items">
         <li><div class="tags"><span class="tag">Built</span><span class="tag used">Used by galleries</span></div><p>Anchor swap. During the pilot it ran as a simpler rule that switched to the gallery’s own median once it had 3 sales of the artist; the weighted version above replaced it.</p></li>
         <li><div class="tags"><span class="tag">Built</span></div><p>The estimate screen shows how each number was built: the artist’s typical price, how far this gallery’s own sales moved it, and the size adjustment.</p></li>
-        <li><div class="tags"><span class="tag">Built</span></div><p>Isolation is enforced in the database. Row-level security on 141 tables keeps each customer’s records inside its own scope.</p></li>
       </ul>
 
-      <div class="tablewrap">
-        <table>
-          <thead><tr><th>Who</th><th>What they see</th><th>When</th><th>Why</th></tr></thead>
-          <tbody>
-            <tr><td>Gallery</td><td>Estimate, error range, confidence grade</td><td>All artists, including thinly traded ones</td><td>Built from public data and the gallery’s own sales, which stay its own</td></tr>
-            <tr><td>Collector (outside)</td><td>Anonymized price range</td><td>Only artists with 5+ recorded sales</td><td>Under 5, individual deals become identifiable</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <ul class="items">
-        <li class="plain"><p>Because their records stay theirs, 3 galleries agreed to load their sales records into the platform.</p></li>
-        <li class="plain"><p>A lawyer reviewed the dual-output structure, and I filed a Korean patent application for it (pending).</p></li>
-      </ul>
     </section>
-
     <section id="deploy">
-      <div class="sec-head"><span class="num">5</span><h2>On-site deployment, and field feedback into product</h2></div>
+      <div class="sec-head"><span class="num">8</span><h2>On site: demos, PoCs, and the pilot</h2></div>
       <p class="situation">Galleries judged the product on their own works, so every demo ran on their own data.</p>
       <ul class="items">
-        <li><div class="tags"><span class="tag used">Used by galleries</span></div><p>On site, I entered a gallery’s own artworks or sales ledger and showed estimates on the spot. Pilot galleries then used these estimates when setting real prices.</p></li>
-        <li><div class="tags"></div><p>I ran onboarding for the pilot galleries myself.</p></li>
-        <li><div class="tags"><span class="tag">Built</span></div><p>During the pilot, a client report took over 30 seconds. Timing each step showed repeated reads of the raw transaction table; precomputing those values brought it down to 0.76 seconds.</p></li>
-        <li><div class="tags"><span class="tag">Built</span></div><p>In the alpha test, a teammate ran scenario tests and logged 49 issues in a shared tracker. All 21 bugs were fixed. Of 28 issues where the product worked as designed but confused users, 26 led to changes (merged tabs, renamed labels, added guidance and fields), and 2 were kept.</p></li>
-        <li><div class="tags"><span class="tag">Built</span></div><p>AI proposes, people confirm. Image analysis fills 12 artwork fields only when 5 runs agree, and flags the rest for review. Generated drafts, email sorting, and collector suggestions never send anything or change data on their own.</p></li>
+        <li><div class="tags"><span class="tag">Built</span></div><p>Before the PoCs started, a teammate ran scenario tests in the alpha and logged 49 issues in a shared tracker. All 21 bugs were fixed. Of 28 issues where the product worked as designed but confused users, 26 led to changes (merged tabs, renamed labels, added guidance and fields), and 2 were kept.</p></li>
+        <li><div class="tags"><span class="tag used">Used by galleries</span></div><p>On site, I entered a gallery’s own artworks or sales ledger and showed estimates on the spot. Of the 36 meetings, 10 became PoCs.</p></li>
+        <li class="plain"><p>I ran onboarding for the PoC galleries myself.</p></li>
+        <li class="plain"><p>Because their records stay theirs, 3 galleries loaded their sales records into the platform.</p></li>
+        <li><div class="tags"><span class="tag used">Used by galleries</span></div><p>Pilot galleries then used the estimates when setting real prices.</p></li>
+        <li><div class="tags"><span class="tag">Built</span></div><p>During the PoCs, a client report took over 30 seconds. Timing each step showed repeated reads of the raw transaction table; precomputing those values brought it down to 0.76 seconds.</p></li>
         <li><div class="tags"><span class="tag">Built</span></div><p>Sales ledgers came in each gallery’s own format, so an LLM import reads the format as it is and asks the user only about rows with no currency.</p></li>
       </ul>
-    </section>
-
-    <section id="law">
-      <div class="sec-head"><span class="num">6</span><h2>Turning a law without final rules into a workflow</h2></div>
-      <p class="situation">Korea’s artist resale-royalty law arrived before its rates and thresholds were final.</p>
-
-      <div class="flow" aria-label="Resale royalty workflow">
-        <span class="step">Suggested</span><span class="then">then</span>
-        <span class="step">Confirmed</span><span class="then">then</span>
-        <span class="step">Artist notified</span><span class="then">then one of</span>
-        <span class="ends"><span class="step">Paid</span><span class="step">Exempt</span><span class="step">Disputed</span></span>
-      </div>
-
-      <ul class="items">
-        <li><div class="tags"><span class="tag">Built</span></div><p>The rate (3%), threshold (KRW 500,000), and protection period (70 years) live in settings, not code. Each case stores the values in force when it occurred, so later changes never recompute past cases.</p></li>
-        <li><div class="tags"><span class="tag">Built</span></div><p>Detection creates a suggestion, not an obligation. Acquisition dates entered for admin purposes were being read as resales, so a person confirms each case.</p></li>
-        <li><div class="tags"><span class="tag">Built</span></div><p>The acquisition-date field tells users that filling it in makes the work subject to resale royalty.</p></li>
-        <li><div class="tags"><span class="tag">Built</span></div><p>In the same release, sales of KRW 10M or more create a reporting task due in 30 days, with the government form as a PDF. The threshold is borrowed from anti-money-laundering rules and marked as pending.</p></li>
-      </ul>
+      <p class="body">This is where the bet in section 1 landed: galleries set real prices from a basis built on public records and sharpened only by their own sales.</p>
     </section>
 
   </main>
